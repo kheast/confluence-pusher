@@ -115,7 +115,8 @@ def update_content(path,page_id,title):
     content = content.replace(r"</br>",r"<br/>")
 
     result = CONF.update_page(page_id, title, content)
-    print(result['message'])
+    link = result["_links"]["webui"]
+    print(f"created: {link}")
 
 def resize_svg(path,w_constrain,h_constrain):
 
