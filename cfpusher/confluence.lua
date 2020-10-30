@@ -242,9 +242,13 @@ function CodeBlock(s, attr)
   -- If code block has class 'dot', pipe the contents through dot
   -- and base64, and include the base64-encoded png as a data: URL.
   if attr.class and string.match(" " .. attr.class .. " ", " dot ") then
-    -- otherwise treat as code (one could pipe through a highlighter)
+    -- This doesn't seem to work in Confluence cloud -- they only appear to support
+    -- "attached" or "external" images.  This needs work.  Until then, use "dotascii".
     local png = pipe("base64", pipe("dot -Tpng", s))
     return '<img src="data:image/png;base64,' .. png .. '"/>'
+  elseif attr.class and string.match(" " .. attr.class .. " ", " dotascii ") then
+    local ascii = pipe("graph-easy --as=boxart", s)
+    return "<pre><code" .. attributes(attr) .. ">" .. escape(ascii) .. "</code></pre>"
   else
     return "<pre><code" .. attributes(attr) .. ">" .. escape(s) .. "</code></pre>"
   end
